@@ -8,6 +8,7 @@ class JoplinAPI:
 
     def request(self, path, parameter = ""):
         response = requests.get(f"{self.api_url}/{path}?token={self.token}{parameter}")
+        print(f"{self.api_url}/{path}?token={self.token}{parameter}")
         notes = response.json()
 
         return notes
@@ -33,7 +34,6 @@ class JoplinAPI:
             page += 1
 
         return notes
-        
     
-    def get_note_id(self, id):
-        pass
+    def get_note_text(self, id):
+        return self.request(f"notes/{id}", "&fields=body")
