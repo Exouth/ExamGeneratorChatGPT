@@ -27,3 +27,5 @@ for topic in toppic_notes:
     engine.next_step()
 
 doc.save(name);
+
+engine.exit()
