@@ -1,0 +1,14 @@
+certifi==2023.5.7
+charset-normalizer==3.2.0
+colorama==0.4.6
+defusedxml==0.7.1
+idna==3.4
+lxml==4.9.3
+odfpy==1.4.1
+prompt-toolkit==3.0.39
+pyfiglet==0.8.post1
+pyperclip==1.8.2
+python-docx==0.8.11
+requests==2.31.0
+urllib3==2.0.3
+wcwidth==0.2.6
