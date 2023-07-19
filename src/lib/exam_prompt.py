@@ -39,8 +39,10 @@ class ExamPrompt():
         self.prompt_instance.prompt_user("Are you ready to go to the next step? Click a Button")
         self.prompt_instance.send_logo()
 
-    def prompt_exam(self, topic_id, document):
+    def prompt_exam(self, topic_id, title, document):
         markdown_file = self.api_instance.get_note_text(topic_id)
+
+        self.prompt_instance.write_message("Doing now: " + title)
 
         # Multiplie Choice Questions
         message = "Here is my Markdown Text. Can you give me 15 Multiplie Choices Questions based on this Note? Also put the Characters '+++' after each Multiplie Choice at the end without the Answer just the Characters! Here is my Markdown File: " + markdown_file["body"]

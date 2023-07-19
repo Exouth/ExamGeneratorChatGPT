@@ -26,7 +26,7 @@ try:
     doc = OpenDocumentText()
     for topic in toppic_notes:
         page, note_id, title = topic
-        engine.prompt_exam(note_id, doc)
+        engine.prompt_exam(note_id, title, doc)
         engine.next_step()
 
     doc.save(name);

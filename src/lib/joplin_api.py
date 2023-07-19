@@ -8,7 +8,6 @@ class JoplinAPI:
 
     def request(self, path, parameter = ""):
         response = requests.get(f"{self.api_url}/{path}?token={self.token}{parameter}")
-        print(f"{self.api_url}/{path}?token={self.token}{parameter}")
         notes = response.json()
 
         return notes
