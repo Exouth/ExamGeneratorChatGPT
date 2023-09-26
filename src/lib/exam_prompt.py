@@ -1,5 +1,6 @@
 import sys
 from pyperclip import copy
+from lib.obsidian_api import ObsidianAPI
 from lib.prompting import Prompt
 from lib.joplin_api import JoplinAPI
 from odf.text import P, Span, List, ListItem
@@ -8,25 +9,28 @@ from odf import easyliststyle
 
 class ExamPrompt():
 
-    def __init__(self, joplin_api):
+    def __init__(self):
         self.name = ""
+        self.note_path = ""
         self.topic_number = ""
         self.prompt_instance = Prompt()
-        self.api_instance = JoplinAPI(joplin_api)
+        self.api_instance = ObsidianAPI()
 
     def ask_exam_name(self):
         self.name = self.prompt_instance.promp_user_return("What is the Exam Name?", "You set the Exam name to")
         return self.name
+    
+    def ask_note_path(self):
+        self.note_path = self.prompt_instance.promp_user_return("What is the Path to the Notes?", "You set the Path to")
 
     def ask_topic_number(self):
-        self.topic_number = self.prompt_instance.promp_user_return("What is the Topic Number?", "You set the Topic Number to")
+        self.topic_number = self.prompt_instance.promp_user_return("What is the Topic?", "You set the Topic to")
 
     def give_topic_notes(self):
-        matching_notes = self.api_instance.find_all_topic_notes(self.topic_number)
+        matching_notes = self.api_instance.find_all_topic_notes(self.note_path, self.topic_number)
 
         for note in matching_notes:
-            page, note_id, title = note
-            self.prompt_instance.write_message(f"Used Note - Page: {page}, ID: {note_id}, Title: {title}")
+            self.prompt_instance.write_message(f"Used Note: {note}")
 
         return matching_notes
     
@@ -35,17 +39,19 @@ class ExamPrompt():
         copy(message)
         self.prompt_instance.write_message(message)
 
+    def ask_obsidian_path(self):
+        self.general_path = self.__prompt_instance.promp_user_return("What is the Path to Obsidian?", "You set the Path to Obsidian to")
+        return self.general_path
+
     def next_step(self):
         self.prompt_instance.prompt_user("Are you ready to go to the next step? Click a Button")
         self.prompt_instance.send_logo()
 
-    def prompt_exam(self, topic_id, title, document):
-        markdown_file = self.api_instance.get_note_text(topic_id)
-
-        self.prompt_instance.write_message("Doing now: " + title)
+    def prompt_exam(self, path, document):
+        markdown_file = self.api_instance.get_note_text(path)
 
         # Multiplie Choice Questions
-        message = "Here is my Markdown Text. Can you give me 15 Multiplie Choices Questions based on this Note? Also put the Characters '+++' after each Multiplie Choice at the end without the Answer just the Characters! Here is my Markdown File: " + markdown_file["body"]
+        message = "Here is my Markdown Text. Can you give me 15 Multiplie Choices Questions based on this Note? Also put the Characters '+++' after each Multiplie Choice at the end without the Answer just the Characters! Here is my Markdown File: " + markdown_file
         copy(message)
         self.prompt_instance.write_message(message)
 
@@ -58,7 +64,7 @@ class ExamPrompt():
         self.next_step()
 
         # True or False Questions
-        message = "Here is my Markdown Text. Can you give me 10 True or False Questions based on this Note? Also put the Characters '+++' after each True or False Question at the end without the Answer just the Characters! Here is my Markdown File: " + markdown_file["body"]
+        message = "Here is my Markdown Text. Can you give me 10 True or False Questions based on this Note? Also put the Characters '+++' after each True or False Question at the end without the Answer just the Characters! Here is my Markdown File: " + markdown_file
         copy(message)
         self.prompt_instance.write_message(message)
 
@@ -71,7 +77,7 @@ class ExamPrompt():
         self.next_step()
 
         # Full Sentence Answers
-        message = "Here is my Markdown Text. Can you give me 15 Full Sentence Questions, where i need to answer with an Full Sentence based on this Note? Also put the Characters '+++' after each Full Sentence Question at the end without the Answer just the Characters! Here is my Markdown File: " + markdown_file["body"]
+        message = "Here is my Markdown Text. Can you give me 15 Full Sentence Questions, where i need to answer with an Full Sentence based on this Note? Also put the Characters '+++' after each Full Sentence Question at the end without the Answer just the Characters! Here is my Markdown File: " + markdown_file
         copy(message)
         self.prompt_instance.write_message(message)
 
